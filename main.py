@@ -60,10 +60,6 @@ Builder.load_string("""
                 root.manager.transition.duration = 0.3  
                 root.manager.current = 'menu_screen'
 
-<<<<<<< HEAD
-from kivy.core.window import Window
-Window.clearcolor = (.12, .20, .17, 1)
-=======
 <ListConsultsScreen>: 
     GridLayout:
         cols : 1
@@ -75,7 +71,6 @@ Window.clearcolor = (.12, .20, .17, 1)
                 root.manager.transition.direction = 'right' 
                 root.manager.transition.duration = 0.3  
                 root.manager.current = 'menu_screen'
->>>>>>> 85947bd9e6aea2cf48a991dab14b494c45655136
 
 <RescheduleConsultScreen>: 
     GridLayout:
@@ -89,18 +84,6 @@ Window.clearcolor = (.12, .20, .17, 1)
                 root.manager.transition.duration = 0.3  
                 root.manager.current = 'menu_screen'
 
-<<<<<<< HEAD
-class FirstLayout(BoxLayout):
-    pass
-    
-
-class App(App):
-    def build(self):
-        return FirstLayout()
-
-test = App()
-test.run()
-=======
 <CancelConsultScreen>: 
     GridLayout:
         cols : 1
@@ -148,4 +131,3 @@ class ScreenApp(App):
 
 sample_app = ScreenApp() 
 sample_app.run() 
->>>>>>> 85947bd9e6aea2cf48a991dab14b494c45655136
