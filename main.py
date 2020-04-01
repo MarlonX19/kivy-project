@@ -3,7 +3,7 @@ from kivy.app import App
 from kivy.lang import Builder   
 from kivy.uix.screenmanager import ScreenManager, Screen 
 from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.textinput import TextInput
 
 from kivy.config import Config
 Config.set('graphics', 'width', '350')
@@ -50,7 +50,19 @@ Builder.load_string("""
  
 <NewConsultScreen>: 
     GridLayout:
-        cols : 1
+        cols: 1
+        GridLayout:
+            size_hint_y: 0.6
+            cols: 2
+            Label:
+                text: 'Seu nome'
+                markup: True
+                shorten: True
+                ellipsis_options: {'color':(1,0.5,0.5,1),'underline':True}
+            TextInput:
+                height: self.minimum_height
+                multiline: False
+                id: txt_input
         Button: 
             text: "VOLTAR AO MENU" 
             font_size: 25
