@@ -64,7 +64,7 @@ class AllConsults(list):
         
     
 class ListConsultsScreen(Screen): 
-    def __init__(self, consultas=[], **kwargs): #keywords arguments
+    def __init__(self, consultas=[], **kwargs): #keywords argument
         super().__init__(**kwargs)
         
        # consultas = AllConsults.getList()
