@@ -1,4 +1,6 @@
 <Gerenciador>:
+    LoginScreen:
+        name: 'login'
     MenuScreen:
         name: 'menu'
     NewConsultScreen:
@@ -36,6 +38,43 @@
             font_size: 20
             background_color : 1, 0, 0, 1 
             on_release: app.stop()
+
+<LoginScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 50
+        spacing: 20
+        Image: 
+            source: 'logo.png'
+            size_hint_y: None
+            height: 100
+            allow_stretch: True
+        BoxLayout: 
+            orientation: 'vertical'
+            Label:
+                text: 'Usuario:'   
+            TextInput:
+                font_size: 20
+                id: nameInput
+        BoxLayout: 
+            orientation: 'vertical'
+            Label:
+                pos_hint: {'left': 1}
+                text: 'Senha:'
+            TextInput:
+                font_size: 20
+                password: True
+                id: passInput    
+        Button:
+            text: 'Autenticar-se'
+            font_size: 20
+            background_color : 0, 1, 1, 1  
+            on_release: root.login() 
+        Button:
+            text: 'Registrar-se'
+            font_size: 20
+            background_color : 0, 1, 1, 1 
+            on_release: root.register()
             
 <NewConsultScreen>:
     BoxLayout:
