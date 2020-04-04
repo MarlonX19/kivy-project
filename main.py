@@ -38,6 +38,20 @@ class AllConsults(list):
 
     def addNew(self, texto=['nome', 'marlon']):
         self.listConsults.append(texto) # aqui de fato faz o append na lista
+
+
+        try: # Cria arquivo de consulta
+            with open('consults.txt', 'w+') as file:
+                file.write("Hello \n") 
+
+        except IOError as e:
+            print(e)
+            return
+        else:
+            popup = Popup(title='Atenção!', content=Label(text='Consulta registrada com sucesso.'), size_hint=(None, None), size=(300, 200))
+            popup.open()
+
+
         return self.listConsults
         
     @staticmethod  
