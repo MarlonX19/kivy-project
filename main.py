@@ -21,25 +21,23 @@ class NewConsultScreen(Screen):
         texto = self.ids.texto.text #pega o que o usuário digitou
         print('texto digitado: ' + texto)
         # ListConsultsScreen.ids.box.add_widget(Consult(text=texto)) #adiciona na lista
-        AllConsults.addNewConsult(texto) #adiciona na lista
+        allCon = AllConsults(texto) #Instancia a classe de consulta e no construtor ja passa o texto
+        #allCon.addNewConsult(texto) # acredito não ser necessário esse método
         self.ids.texto.text = ''
         
-class AllConsults(object):
+class AllConsults(list):
     
-     
-    def __init__(self, listConsults=['teste']): 
-        self.listConsults = listConsults
-        
+    def __init__(self, consult=['teste']):
+        self.listConsults = [] #Cria a lista
+        self.addNew(consult) #Chama método para adicionar e passa o texto digitado
         
     @staticmethod
     def addNewConsult(texto=''):
-        
         return AllConsults.addNew(texto)
              
 
-    def addNew(self, texto=''):
-        
-        self.listConsults.append(texto)
+    def addNew(self, texto=['nome', 'marlon']):
+        self.listConsults.append(texto) # aqui de fato faz o append na lista
         return self.listConsults
         
     @staticmethod  
