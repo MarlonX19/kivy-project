@@ -82,7 +82,6 @@ class LoginScreen(Screen):
                  
     def login(self):
         users = []
-        user = []
 
         username = self.ids.nameInput.text
         password = self.ids.passInput.text
@@ -102,10 +101,10 @@ class LoginScreen(Screen):
         for userArq in usersArq:
             users.append((userArq.split()))
 
-        user = list(filter(lambda x: x[0] == username, users))[0]
+        user = list(filter(lambda x: x[0] == username, users))
 
-        if user:
-            if user[0] == username and user[1] == password:
+        if len(user) > 0:
+            if user[0][0] == username and user[0][1] == password:
                 App.get_running_app().root.current = 'menu'
             else:
                 popup = Popup(title='Atenção!', content=Label(text='Usuário ou senha inválidos!'), size_hint=(None, None), size=(300, 200))
