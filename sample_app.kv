@@ -1,0 +1,100 @@
+<Gerenciador>:
+    MenuScreen:
+        name: 'menu'
+    NewConsultScreen:
+        name: 'cadastrar_consulta'
+    ListConsultsScreen
+        name: 'lista_consultas'
+
+
+<MenuScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 70
+        spacing: 50
+        Image: 
+            source: 'logo.png'
+            size_hint_y: None
+            height: 100
+            allow_stretch: True
+        Button:
+            text: 'Cadastrar Consulta'
+            font_size: 20
+            background_color : 0, 1, 1, 1  
+            on_release: app.root.current = 'cadastrar_consulta'  
+        Button:
+            text: 'Historico de Consultas'
+            font_size: 20
+            background_color : 0, 1, 1, 1 
+            on_release: app.root.current = 'lista_consultas'
+        Button:
+            text: 'Assistente'
+            font_size: 20
+            background_color : 0, 1, 1, 1        
+        Button:
+            text: 'Sair'
+            font_size: 20
+            background_color : 1, 0, 0, 1 
+            on_release: app.stop()
+            
+<NewConsultScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        ActionBar:
+            ActionView:
+                ActionPrevious: 
+                    title: 'Consultas'
+                    on_release: app.root.current = 'menu'
+                ActionButton:
+                    text: 'Sair'
+                    on_release: app.stop()
+        BoxLayout:
+            orientation: 'vertical'
+            padding: 70
+            spacing: 50
+            Image: 
+                source: 'logo.png'
+                size_hint_y: None
+                height: 100
+                allow_stretch: True
+            BoxLayout:
+                size_hint_y: None
+                height: 60
+                TextInput:
+                    id: texto
+                Button:
+                    text: '+'
+                    size_hint_x: None
+                    width: 60
+                    on_release: root.addWidget()  
+                  
+<ListConsultsScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        ActionBar:
+            ActionView:
+                ActionPrevious: 
+                    title: 'Consultas'
+                    on_release: app.root.current = 'menu'
+                ActionButton:
+                    text: 'Sair'
+                    on_release: app.stop()
+        ScrollView:
+            BoxLayout:
+                id: box
+                orientation: 'vertical'
+                size_hint_y: None 
+                height: self.minimum_height
+        
+        
+<Consult>:
+    size_hint_y: None
+    height: 120   
+    Label:
+        id: label
+        font_size: 30
+    Button:
+        text: 'X'
+        size_hint_x: None
+        width: 60
+        on_release: app.root.get_screen('lista_consultas').ids.box.remove_widget(root)
