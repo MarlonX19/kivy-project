@@ -41,8 +41,8 @@ class AllConsults(list):
 
 
         try: # Cria arquivo de consulta
-            with open('consults.txt', 'w+') as file:
-                file.write("Hello \n") 
+            with open('consults.txt', 'a+') as file:
+                file.write(texto + "\n") 
 
         except IOError as e:
             print(e)
