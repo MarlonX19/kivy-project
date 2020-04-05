@@ -1,4 +1,4 @@
-<Gerenciador>:
+<Manager>:
     LoginScreen:
         name: 'login'
     MenuScreen:
@@ -9,50 +9,20 @@
         name: 'lista_consultas'
 
 
-<MenuScreen>:
-    BoxLayout:
-        orientation: 'vertical'
-        padding: 70
-        spacing: 50
-        Image: 
-            source: 'logo.png'
-            size_hint_y: None
-            height: 100
-            allow_stretch: True
-        Button:
-            text: 'Cadastrar Consulta'
-            font_size: 20
-            background_color : 0, 1, 1, 1  
-            on_release: app.root.current = 'cadastrar_consulta'  
-        Button:
-            text: 'Historico de Consultas'
-            font_size: 20
-            background_color : 0, 1, 1, 1 
-            on_release: app.root.current = 'lista_consultas'
-        Button:
-            text: 'Assistente'
-            font_size: 20
-            background_color : 0, 1, 1, 1        
-        Button:
-            text: 'Sair'
-            font_size: 20
-            background_color : 1, 0, 0, 1 
-            on_release: app.stop()
-
 <LoginScreen>:
     BoxLayout:
         orientation: 'vertical'
         padding: 50
         spacing: 20
         Image: 
-            source: 'logo.png'
+            source: './src/images/logo.png'
             size_hint_y: None
             height: 100
             allow_stretch: True
         BoxLayout: 
             orientation: 'vertical'
             Label:
-                text: 'Usuario:'   
+                text: 'Usuário:'   
             TextInput:
                 font_size: 20
                 id: nameInput
@@ -76,6 +46,38 @@
             background_color : 0, 1, 1, 1 
             on_release: root.register()
             
+
+<MenuScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 70
+        spacing: 50
+        Image: 
+            source: './src/images/logo.png'
+            size_hint_y: None
+            height: 100
+            allow_stretch: True
+        Button:
+            text: 'Cadastrar Consulta'
+            font_size: 20
+            background_color : 0, 1, 1, 1  
+            on_release: app.root.current = 'cadastrar_consulta'  
+        Button:
+            text: 'Histórico de Consultas'
+            font_size: 20
+            background_color : 0, 1, 1, 1 
+            on_release: app.root.current = 'lista_consultas'
+        Button:
+            text: 'Relatórios'
+            font_size: 20
+            background_color : 0, 1, 1, 1        
+        Button:
+            text: 'Sair'
+            font_size: 20
+            background_color : 1, 0, 0, 1 
+            on_release: app.stop()
+
+            
 <NewConsultScreen>:
     BoxLayout:
         orientation: 'vertical'
@@ -89,23 +91,35 @@
                     on_release: app.stop()
         BoxLayout:
             orientation: 'vertical'
-            padding: 70
-            spacing: 50
+            padding: 50
+            spacing: 20
             Image: 
-                source: 'logo.png'
+                source: './src/images/logo.png'
                 size_hint_y: None
                 height: 100
                 allow_stretch: True
-            BoxLayout:
-                size_hint_y: None
-                height: 60
+            BoxLayout: 
+                orientation: 'vertical'
+                Label:
+                    text: 'Descricão:'   
                 TextInput:
-                    id: texto
-                Button:
-                    text: '+'
-                    size_hint_x: None
-                    width: 60
-                    on_release: root.addWidget()  
+                    hint_text: 'Ex: Preciso de ajuda...'
+                    font_size: 20
+                    id: description
+            BoxLayout: 
+                orientation: 'vertical'
+                Label:
+                    text: 'Data do agendamento:'
+                TextInput:
+                    hint_text: 'Ex: 25/01/2020'
+                    font_size: 20
+                    id: date    
+            Button:
+                text: 'Cadastrar'
+                font_size: 20
+                background_color : 0, 1, 1, 1  
+                on_release: root.newConsult() 
+     
                   
 <ListConsultsScreen>:
     BoxLayout:

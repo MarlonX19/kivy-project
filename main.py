@@ -4,100 +4,50 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.core.window import Window
+from kivy.lang.builder import Builder
+from kivy.uix.scrollview import ScrollView
 
 import sqlite3
+
 #chamada de conexão ao banco de dados
 class Connection():
-    conn = sqlite3.connect('consultas.db')
-    cursor = conn.cursor()
+
+    def __init__(self):
+        self.conn = sqlite3.connect('DBApp.db')
+        self.cursor = conn.cursor()
 
     #popular dados inseridos no campo de consultas
     #utilizando o comando comando INSERT 
     #cursor.execute("INSERT INTO consultas (description) VALUES(%s)", (description))
     #con.commit()
 
-class Gerenciador(ScreenManager):
-    pass
-
-class MenuScreen(Screen):
-    pass
-
 class NewConsultScreen(Screen): 
     
     def __init__(self, tarefas=[], **kwargs): #keywords arguments
         super().__init__(**kwargs)
-        
-        
-    def addWidget(self):
-        texto = self.ids.texto.text #pega o que o usuário digitou
-        print('texto digitado: ' + texto)
-        # ListConsultsScreen.ids.box.add_widget(Consult(text=texto)) 
-        # #adiciona na lista
-        allCon = AllConsults(texto) #Instancia a classe de consulta e no construtor ja passa o texto
-        #allCon.addNewConsult(texto) # acredito não ser necessário esse método
-        self.ids.texto.text = ''
-        
-class AllConsults(list):
-    
-    def __init__(self, consult=['teste']):
-        self.listConsults = [] #Cria a lista
-        self.addNew(consult) #Chama método para adicionar e passa o texto digitado
-        
-    @staticmethod
-    def addNewConsult(texto=''):
-        return AllConsults.addNew(texto)
-             
+          
+    def newConsult(self):
+        description = self.ids.description.text #pega o que o usuário digitou
+        date = self.ids.date.text #pega o que o usuário digitou
 
-    def addNew(self, texto=['nome', 'marlon']):
-         
         try:
-            conn = sqlite3.connect('consultas.db', isolation_level=None)
-            cursor = conn.cursor()
-            print(cursor)
-        except Error as e:
+            conn = sqlite3.connect('DBApp.db')
+            cur = conn.cursor()
+
+            cur.execute("INSERT INTO consults (description, date) VALUES (?, ?)", (description, date))
+            conn.commit()
+        except Exception as e:
             print(e)
-
-        
-        self.listConsults.append(texto) # aqui de fato faz o append na lista
-
-        try: # Cria arquivo de consulta
-            with open('consults.txt', 'a+') as file:
-                file.write(texto + "\n") 
-
-        except IOError as e:
-            print(e)
-            return
+            popup = Popup(title='Atenção!', content=Label(text='Não foi possível registrar a consulta.'), size_hint=(None, None), size=(300, 200))
+            popup.open()
+            conn.rollback() 
         else:
             popup = Popup(title='Atenção!', content=Label(text='Consulta registrada com sucesso.'), size_hint=(None, None), size=(300, 200))
             popup.open()
-            conn = sqlite3.connect('consultas.db')
-            cur = conn.cursor()
-            sqlite_query = """INSERT INTO consultas
-                          (description) 
-                          VALUES (?);"""
-            custom_data = (texto)
+        finally:
+            conn.close()
+               
 
-            cur.execute(sqlite_query, (custom_data,))
-            conn.commit()
-            cur.execute("SELECT * FROM consultas")
- 
-            rows = cur.fetchall()
- 
-            for row in rows:
-                print(row)
-
-        return self.listConsults
-        
-    @staticmethod  
-    def getList():
-        pass
-      #  return AllConsults.getListConsults()
-    
-    
-    def getListConsults(self):
-        return self.listConsults
-        
-        
     
 class ListConsultsScreen(Screen): 
     def __init__(self, consultas=[], **kwargs): #keywords arguments
@@ -127,8 +77,6 @@ class LoginScreen(Screen):
         super().__init__(**kwargs)
                  
     def login(self):
-        users = []
-
         username = self.ids.nameInput.text
         password = self.ids.passInput.text
 
@@ -138,31 +86,28 @@ class LoginScreen(Screen):
             return
 
         try:
-            with open('users.txt') as file:
-                usersArq = file.read().splitlines()
-        except IOError as e:
-            print(e)
-            return    
+            conn = sqlite3.connect('DBApp.db')
+            cur = conn.cursor()
 
-        for userArq in usersArq:
-            users.append((userArq.split()))
-
-        user = list(filter(lambda x: x[0] == username, users))
-
-        if len(user) > 0:
-            if user[0][0] == username and user[0][1] == password:
+            cur.execute("SELECT name, password FROM users WHERE name = ? and password = ?", (username, password,))
+            rows = cur.fetchall()
+            
+            if len(rows) > 0:
                 App.get_running_app().root.current = 'menu'
             else:
-                popup = Popup(title='Atenção!', content=Label(text='Usuário ou senha inválidos!'), size_hint=(None, None), size=(300, 200))
+                popup = Popup(title='Atenção!', content=Label(text='Usuário ou senha incorretos!'), size_hint=(None, None), size=(300, 200))
                 popup.open()
-        else:
-            popup = Popup(title='Atenção!', content=Label(text='Não encontramos o usuário!'), size_hint=(None, None), size=(300, 200))
+        except Exception as e:
+            print(e)
+            popup = Popup(title='Atenção!', content=Label(text='Erro na autenticação!'), size_hint=(None, None), size=(300, 200))
             popup.open()
-            
+            conn.rollback()
+            return
+        finally:
+            conn.close()
+           
         
     def register(self):
-        users = []
-
         username = self.ids.nameInput.text
         password = self.ids.passInput.text
 
@@ -172,50 +117,44 @@ class LoginScreen(Screen):
             return
 
         try:
-            with open('users.txt', 'r') as file:
-                usersArq = file.read().splitlines()
+            conn = sqlite3.connect('DBApp.db')
+            cur = conn.cursor()
 
-            for userArq in usersArq:
-                if userArq.split()[0] == username:
-                    popup = Popup(title='Atenção!', content=Label(text='Usuário já existe!'), size_hint=(None, None), size=(300, 200))
-                    popup.open()
-                    return
+            cur.execute("SELECT name FROM users WHERE name = ?", (username,))
+            rows = cur.fetchall()
+            
+            if len(rows) > 0:
+                popup = Popup(title='Atenção!', content=Label(text='Usuário já existe!'), size_hint=(None, None), size=(300, 200))
+                popup.open()
+                conn.close()
+                return
 
-            with open('users.txt', 'a') as file:
-                users = []
-                if len(usersArq) == 0:
-                    users.append(username + ' ' + password)
-                else:
-                    users.append('\n' + username + ' ' + password)
-                file.writelines(users)
-        except IOError as e:
+            cur.execute("INSERT INTO users (name, password) VALUES (?, ?)", (username, password,))
+
+            conn.commit()
+        except Exception as e:
             print(e)
+            popup = Popup(title='Atenção!', content=Label(text='Erro ao tentar registrar um usuário!'), size_hint=(None, None), size=(300, 200))
+            popup.open()
+            conn.rollback()
             return
         else:
             popup = Popup(title='Atenção!', content=Label(text='Usuário criado com sucesso.\nAutentique-se!'), size_hint=(None, None), size=(300, 200))
             popup.open()
-        
-        
-  
-class RescheduleConsultScreen(Screen): 
+        finally:
+            conn.close()
+
+
+class Manager(ScreenManager):
     pass
 
-class CancelConsultScreen(Screen): 
+class MenuScreen(Screen):
     pass
-   
-
-
-# classe Tarefa
-class Consult(BoxLayout):
-    def __init__(self, text='', **kwargs):
-        super().__init__(**kwargs)
-        self.ids.label.text = text
-
       
-class Sample_app(App):
+class ConsultsApp(App):
     def build(self):
-        return Gerenciador() 
+        Builder.load_string(open("LayoutsScreens.kv", encoding="utf-8").read(), rulesonly=True)
+        return Manager() 
     
-  
 
-Sample_app().run()
+ConsultsApp().run()
