@@ -5,6 +5,17 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.core.window import Window
 
+import sqlite3
+#chamada de conexão ao banco de dados
+class Connection():
+    conn = sqlite3.connect('consultas.db')
+    cursor = conn.cursor()
+
+    #popular dados inseridos no campo de consultas
+    #utilizando o comando comando INSERT 
+    #cursor.execute("INSERT INTO consultas (description) VALUES(%s)", (description))
+    #con.commit()
+
 class Gerenciador(ScreenManager):
     pass
 
@@ -20,7 +31,8 @@ class NewConsultScreen(Screen):
     def addWidget(self):
         texto = self.ids.texto.text #pega o que o usuário digitou
         print('texto digitado: ' + texto)
-        # ListConsultsScreen.ids.box.add_widget(Consult(text=texto)) #adiciona na lista
+        # ListConsultsScreen.ids.box.add_widget(Consult(text=texto)) 
+        # #adiciona na lista
         allCon = AllConsults(texto) #Instancia a classe de consulta e no construtor ja passa o texto
         #allCon.addNewConsult(texto) # acredito não ser necessário esse método
         self.ids.texto.text = ''
@@ -37,6 +49,15 @@ class AllConsults(list):
              
 
     def addNew(self, texto=['nome', 'marlon']):
+         
+        try:
+            conn = sqlite3.connect('consultas.db', isolation_level=None)
+            cursor = conn.cursor()
+            print(cursor)
+        except Error as e:
+            print(e)
+
+        
         self.listConsults.append(texto) # aqui de fato faz o append na lista
 
         try: # Cria arquivo de consulta
@@ -49,6 +70,21 @@ class AllConsults(list):
         else:
             popup = Popup(title='Atenção!', content=Label(text='Consulta registrada com sucesso.'), size_hint=(None, None), size=(300, 200))
             popup.open()
+            conn = sqlite3.connect('consultas.db')
+            cur = conn.cursor()
+            sqlite_query = """INSERT INTO consultas
+                          (description) 
+                          VALUES (?);"""
+            custom_data = (texto)
+
+            cur.execute(sqlite_query, (custom_data,))
+            conn.commit()
+            cur.execute("SELECT * FROM consultas")
+ 
+            rows = cur.fetchall()
+ 
+            for row in rows:
+                print(row)
 
         return self.listConsults
         
@@ -64,7 +100,7 @@ class AllConsults(list):
         
     
 class ListConsultsScreen(Screen): 
-    def __init__(self, consultas=[], **kwargs): #keywords argument
+    def __init__(self, consultas=[], **kwargs): #keywords arguments
         super().__init__(**kwargs)
         
        # consultas = AllConsults.getList()
