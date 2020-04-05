@@ -34,16 +34,17 @@
             TextInput:
                 font_size: 20
                 password: True
-                id: passInput    
+                id: passInput 
+        
         Button:
             text: 'Autenticar-se'
             font_size: 20
-            background_color : 0, 1, 1, 1  
+            background_color : 0, 1, 1, 1
             on_release: root.login() 
         Button:
             text: 'Registrar-se'
             font_size: 20
-            background_color : 0, 1, 1, 1 
+            background_color : 0, 2, 2, 1 
             on_release: root.register()
             
 
@@ -96,7 +97,7 @@
             Image: 
                 source: './src/images/logo.png'
                 size_hint_y: None
-                height: 100
+                height: 60
                 allow_stretch: True
             BoxLayout: 
                 orientation: 'vertical'
