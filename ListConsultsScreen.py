@@ -32,6 +32,9 @@ class ListConsultsScreen(Screen):
     def removeConsult(self, idConsult):
         print(idConsult)
 
+    def completeConsult(self, idConsult):
+        print(idConsult)
+
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.voltar)
@@ -57,7 +60,7 @@ class ListConsultsScreen(Screen):
                                             font_size=15, 
                                             size_hint_y=None, 
                                             height=40,
-                                            on_press=lambda x: self.removeConsult(consult[0])))
+                                            on_press=lambda x: self.completeConsult(consult[0])))
 
                 self.ids.boxlist.add_widget(rowbuttons)
 
