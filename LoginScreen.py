@@ -2,6 +2,8 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
+from datetime import date
+
 
 import sqlite3
 
@@ -38,6 +40,11 @@ class LoginScreen(Screen):
             return
         finally:
             conn.close()
+        try: # Cria arquivo de consulta
+            with open('log.txt', 'a+') as file:
+                file.write("O usuário " + username + " entrou no sistema na data " + str(date.today()) + "\n") 
+        except IOError as e:
+            print(e)
            
         
     def register(self):
