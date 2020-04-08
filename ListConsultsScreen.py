@@ -4,6 +4,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.popup import Popup
 from kivy.core.window import Window
 
 import sqlite3
@@ -18,7 +19,7 @@ class ListConsultsScreen(Screen):
             conn = sqlite3.connect('DBApp.db')
             cur = conn.cursor()
 
-            cur.execute("SELECT id, description, date FROM consults")
+            cur.execute("SELECT id, description, date, status FROM consults")
             rows = cur.fetchall()
             
             return rows
@@ -29,15 +30,17 @@ class ListConsultsScreen(Screen):
         finally:
             conn.close()          
 
-    def deleteConsult(self, idConsult):
+    def deleteConsult(self, btnId):
+        idConsult = btnId.replace('btn', '')
+
         try:
             conn = sqlite3.connect('DBApp.db')
             cur = conn.cursor()
 
-            print("DELETANDO CONSULTA ID {}".format(idConsult))
-
-            cur.execute("DELETE FROM consults WHERE id = {}".format(idConsult))
             conn.commit()
+
+            popup = Popup(title='Sucesso!', content=Label(text='Consulta deletada com sucesso!'), size_hint=(None, None), size=(300, 200))
+            popup.open()
 
             self.on_pre_enter()
         except Exception as e:
@@ -47,8 +50,26 @@ class ListConsultsScreen(Screen):
         finally:
             conn.close() 
 
-    def completeConsult(self, idConsult):
-        print(idConsult)
+    def completeConsult(self, btnId):
+        idConsult = btnId.replace('btn', '')
+        
+        try:
+            conn = sqlite3.connect('DBApp.db')
+            cur = conn.cursor()
+
+            cur.execute("UPDATE consults SET status = 1 WHERE id = {}".format(idConsult))
+            conn.commit()
+            
+            popup = Popup(title='Sucesso!', content=Label(text='Consulta marcada como completa!'), size_hint=(None, None), size=(300, 200))
+            popup.open()
+
+            self.on_pre_enter()
+        except Exception as e:
+            print(e)
+            conn.rollback()
+            return
+        finally:
+            conn.close()
 
 
     def on_pre_enter(self):
@@ -59,6 +80,7 @@ class ListConsultsScreen(Screen):
         self.ids.boxlist.clear_widgets()
 
         for consult in consults:
+            print(consult)
             if consult[1] != None and consult[2] != None: 
                 self.ids.boxlist.add_widget(Label(text='Descrição: ' + consult[1] + '\n' + 'Consulta em: ' + consult[2], 
                                                   font_size=15, 
@@ -67,17 +89,24 @@ class ListConsultsScreen(Screen):
 
                 rowbuttons = BoxLayout(orientation='horizontal')
 
-                rowbuttons.add_widget(Button(text='Excluir Consulta', 
-                                            font_size=15, 
-                                            size_hint_y=None, 
-                                            height=40,
-                                            on_press=lambda x: self.deleteConsult(consult[0])))
+                btnDelete = Button(text='Excluir Consulta', 
+                                    id='btn' + str(consult[0]),
+                                    font_size=15, 
+                                    size_hint_y=None, 
+                                    height=40,
+                                    background_color=(1.0, 0.0, 0.0, 1.0))
+                btnDelete.bind(on_press=lambda x: self.deleteConsult(x.id))
 
-                rowbuttons.add_widget(Button(text='Concluir Consulta', 
-                                            font_size=15, 
-                                            size_hint_y=None, 
-                                            height=40,
-                                            on_press=lambda x: self.completeConsult(consult[0])))
+                if consult[3] == 0:
+                    btnComplete = Button(text='Concluir Consulta', 
+                                    id='btn' + str(consult[0]),
+                                    font_size=15, 
+                                    size_hint_y=None, 
+                                    height=40)
+                    btnComplete.bind(on_press=lambda x: self.completeConsult(x.id))
+                    rowbuttons.add_widget(btnComplete)
+
+                rowbuttons.add_widget(btnDelete)
 
                 self.ids.boxlist.add_widget(rowbuttons)
 
