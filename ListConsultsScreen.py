@@ -12,6 +12,7 @@ class ListConsultsScreen(Screen):
     def __init__(self, **kwargs): #keywords arguments
         super(ListConsultsScreen, self).__init__(**kwargs)
         
+        
     def returnAllConsults(self):
         try:
             conn = sqlite3.connect('DBApp.db')
@@ -39,7 +40,7 @@ class ListConsultsScreen(Screen):
         Window.bind(on_keyboard=self.voltar)
 
         consults = self.returnAllConsults()
-
+        self.ids.boxlist.clear_widgets()
         for consult in consults:
             if consult[1] != None and consult[2] != None: 
                 self.ids.boxlist.add_widget(Label(text='Descrição: ' + consult[1] + '\n' + 'Consulta em: ' + consult[2], 
@@ -70,4 +71,5 @@ class ListConsultsScreen(Screen):
             return True
         
     def on_pre_leave(self):
+
         Window.unbind(on_keyboard=self.voltar) #desativa a funcionalidade da tecla
