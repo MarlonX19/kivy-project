@@ -3,6 +3,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.label import Label
 from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
 
 import sqlite3
@@ -42,12 +43,23 @@ class ListConsultsScreen(Screen):
                 self.ids.boxlist.add_widget(Label(text='Descrição: ' + consult[1] + '\n' + 'Consulta em: ' + consult[2], 
                                                   font_size=15, 
                                                   size_hint_y=None, 
-                                                  height=100))  
-                self.ids.boxlist.add_widget(Button(text='Excluir Consulta', 
-                                font_size=15, 
-                                size_hint_y=None, 
-                                height=40,
-                                on_press=lambda x: self.removeConsult(consult[0])))
+                                                  height=150))  
+
+                rowbuttons = BoxLayout(orientation='horizontal')
+
+                rowbuttons.add_widget(Button(text='Excluir Consulta', 
+                                            font_size=15, 
+                                            size_hint_y=None, 
+                                            height=40,
+                                            on_press=lambda x: self.removeConsult(consult[0])))
+
+                rowbuttons.add_widget(Button(text='Concluir Consulta', 
+                                            font_size=15, 
+                                            size_hint_y=None, 
+                                            height=40,
+                                            on_press=lambda x: self.removeConsult(consult[0])))
+
+                self.ids.boxlist.add_widget(rowbuttons)
 
        
     def voltar(self, window, key, *args):
