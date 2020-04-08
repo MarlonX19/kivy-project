@@ -7,6 +7,7 @@ import MenuScreen
 import Connection
 import ListConsultsScreen
 import LoginScreen
+import ReportsScreen
 from Manager import Manager        
       
 class ConsultsApp(App):
