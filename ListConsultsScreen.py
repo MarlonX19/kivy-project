@@ -27,10 +27,25 @@ class ListConsultsScreen(Screen):
             conn.rollback()
             return
         finally:
-            conn.close()  
+            conn.close()          
 
-    def removeConsult(self, idConsult):
-        print(idConsult)
+    def deleteConsult(self, idConsult):
+        try:
+            conn = sqlite3.connect('DBApp.db')
+            cur = conn.cursor()
+
+            print("DELETANDO CONSULTA ID {}".format(idConsult))
+
+            cur.execute("DELETE FROM consults WHERE id = {}".format(idConsult))
+            conn.commit()
+
+            self.on_pre_enter()
+        except Exception as e:
+            print(e)
+            conn.rollback()
+            return
+        finally:
+            conn.close() 
 
     def completeConsult(self, idConsult):
         print(idConsult)
@@ -40,7 +55,9 @@ class ListConsultsScreen(Screen):
         Window.bind(on_keyboard=self.voltar)
 
         consults = self.returnAllConsults()
+
         self.ids.boxlist.clear_widgets()
+
         for consult in consults:
             if consult[1] != None and consult[2] != None: 
                 self.ids.boxlist.add_widget(Label(text='Descrição: ' + consult[1] + '\n' + 'Consulta em: ' + consult[2], 
@@ -54,7 +71,7 @@ class ListConsultsScreen(Screen):
                                             font_size=15, 
                                             size_hint_y=None, 
                                             height=40,
-                                            on_press=lambda x: self.removeConsult(consult[0])))
+                                            on_press=lambda x: self.deleteConsult(consult[0])))
 
                 rowbuttons.add_widget(Button(text='Concluir Consulta', 
                                             font_size=15, 
