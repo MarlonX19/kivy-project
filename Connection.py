@@ -7,4 +7,3 @@ class Connection():
 
     def __init__(self):
         self.conn = sqlite3.connect('DBApp.db')
-        self.cursor = self.conn.cursor()
