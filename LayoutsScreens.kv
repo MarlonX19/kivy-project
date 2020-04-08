@@ -7,6 +7,8 @@
         name: 'cadastrar_consulta'
     ListConsultsScreen
         name: 'lista_consultas'
+    ReportsScreen
+        name: 'graficos'
 
 
 <LoginScreen>:
@@ -71,7 +73,8 @@
         Button:
             text: 'Relatórios'
             font_size: 20
-            background_color : 0, 1, 1, 1        
+            background_color : 0, 1, 1, 1  
+            on_release: app.root.current = 'graficos'      
         Button:
             text: 'Sair'
             font_size: 20
@@ -140,6 +143,24 @@
                 orientation: 'vertical'
                 size_hint_y: None 
                 height: self.minimum_height
+
+
+<ReportsScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        ActionBar:
+            ActionView:
+                ActionPrevious: 
+                    title: 'Consultas'
+                    on_release: app.root.current = 'menu'
+                ActionButton:
+                    text: 'Sair'
+                    on_release: app.stop()
+        BoxLayout:
+            orientation: 'vertical'
+            padding: 50
+            spacing: 20
+            id: boxreport
         
         
 <Consult>:
