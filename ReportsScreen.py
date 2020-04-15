@@ -8,6 +8,9 @@ from kivy.core.window import Window
 
 import sqlite3
 
+from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
+import matplotlib.pyplot as plt
+
 
 class ReportsScreen(Screen): 
     def __init__(self, **kwargs): #keywords arguments
@@ -42,12 +45,28 @@ class ReportsScreen(Screen):
         infos = self.returnInfo()
 
         self.ids.boxreport.clear_widgets()
-
-        self.ids.boxreport.add_widget(Label(text='CONSULTAS FINALIZADAS: ' + str(infos[1][1]), 
-                                    font_size=30))  
         
-        self.ids.boxreport.add_widget(Label(text='CONSULTAS NÃO' + '\n' + 'FINALIZADAS: ' + str(infos[0][1]), 
-                                    font_size=30))  
+
+        #self.ids.boxreport.add_widget(Label(text='CONSULTAS FINALIZADAS: ' + str(infos[1][1]), 
+                                   # font_size=30))  
+        
+        #self.ids.boxreport.add_widget(Label(text='CONSULTAS NÃO' + '\n' + 'FINALIZADAS: ' + str(infos[0][1]), 
+                                    #font_size=30))
+                                    
+        # cria o gráfico de pizza --------------------------------------------
+        finalizadas = str(infos[1][1])
+        naoFinalizadas = str(infos[0][1])
+        x = [finalizadas, naoFinalizadas]
+        
+        label1 = 'Finalizadas (' + str(infos[1][1]) + ')'
+        label2 = 'Não Finalizadas (' + str(infos[0][1]) + ')'
+        labels = [label1, label2]
+        
+        plt.pie(x,labels=labels,autopct='%1.1f%%')
+        
+        # Adiciona o Gráfico à Tela
+        self.ids.boxreport.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+        
 
        
     def voltar(self, window, key, *args):
